@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Room Expense System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 class="title">🏠 Room Expense Dashboard</h1>
+
+  <div id="status" class="status loading">Loading...</div>
+  <div id="loader" class="loader">Loading data...</div>
+
+  <!-- BUTTONS -->
+  <div class="topbar">
+    <button onclick="sendReminder()">📩 WhatsApp Reminder</button>
+    <button onclick="payNow()">💳 Pay</button>
+  </div>
+
+  <!-- MEMBERS -->
+  <h2>👥 Members</h2>
+  <div id="members"></div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="card">Total<br><span id="total"></span></div>
+    <div class="card">Per Person<br><span id="per"></span></div>
+    <div class="card">Units<br><span id="units"></span></div>
+  </div>
+
+  <!-- TABLES -->
+  <h2>📊 Bills</h2>
+  <div class="table-card">
+    <table>
+      <thead id="billHead"></thead>
+      <tbody id="billBody"></tbody>
+    </table>
+  </div>
+
+  <h2>💰 Payments</h2>
+  <div class="table-card">
+    <table>
+      <thead id="payHead"></thead>
+      <tbody id="payBody"></tbody>
+    </table>
+  </div>
+
+  <h2>🧾 Expenses</h2>
+  <div class="table-card">
+    <table>
+      <thead id="expHead"></thead>
+      <tbody id="expBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

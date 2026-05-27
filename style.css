@@ -1,0 +1,119 @@
+body{
+  margin:0;
+  font-family:Segoe UI;
+  background:#0b1220;
+  color:white;
+}
+
+.container{
+  padding:20px;
+}
+
+.title{
+  text-align:center;
+}
+
+/* BUTTONS */
+.topbar{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin:15px 0;
+  flex-wrap:wrap;
+}
+
+button{
+  background:#22c55e;
+  border:none;
+  padding:10px 16px;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+  min-width:160px;
+}
+
+/* STATUS */
+.status{
+  text-align:center;
+  padding:8px;
+  margin-bottom:10px;
+  border-radius:8px;
+}
+
+.loading{background:#f59e0b;color:black}
+
+/* LOADER */
+.loader{
+  display:none;
+  text-align:center;
+  margin:10px;
+}
+
+/* MEMBERS */
+#members{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:10px;
+  margin-bottom:20px;
+}
+
+
+.member-card{
+  background:#1f2937;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+}
+
+.member-card button{
+  margin-top:10px;
+  background:#25D366;
+  width:100%;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:15px 0;
+}
+
+.card{
+  background:#1f2937;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+}
+
+/* TABLE */
+.table-card{
+  background:#111827;
+  padding:10px;
+  border-radius:10px;
+  overflow-x:auto;
+  margin-bottom:20px;
+}
+
+table{
+  width:100%;
+  min-width:900px;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:10px;
+  border-bottom:1px solid #2d3748;
+  text-align:center;
+  white-space:nowrap;
+}
+
+thead{
+  background:#0f172a;
+}
+
+@media(max-width:768px){
+  .stats{
+    grid-template-columns:1fr;
+  }
+}
