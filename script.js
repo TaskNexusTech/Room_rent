@@ -106,7 +106,7 @@ function sendReminder(name){
 
 Please clear your payment.`;
 
-  let phone = "+916307644217";
+  let phone = "+916393247088";
 
   let url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 
