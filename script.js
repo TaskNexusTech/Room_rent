@@ -1,151 +1,253 @@
+const API_URL =
+"https://script.google.com/macros/s/AKfycbwHqo4jGPsZFP76zdoDXezE_67c5BJbMuTQKetpRDe4OysTZxZChoE_qwxDOLC3zPYxsA/exec";
 
-const API = "https://script.google.com/macros/s/AKfycbxd4JyZzW902qZ-iwnv9BaPB7KvOR7Nhosl49Fyy-AP2RgURzVvqn-jmAC9g1gnK8Hsrw/exec";
+loadData();
 
+async function loadData() {
 
-let dataStore = null;
+  try {
 
-async function load(){
+    const response = await fetch(API_URL);
+    const data = await response.json();
 
-  const res = await fetch(API);
-  dataStore = await res.json();
+    renderCards(data.members);
+    renderTable(data.records);
 
-  renderMembers();
-  renderTables(dataStore);
-  calcStats(dataStore);
-}
+  } catch (error) {
 
-/* ================= SPLIT LOGIC ================= */
-function calculateSplit(name){
+    console.error(error);
 
-  let bills = dataStore.bills || [];
-  let expenses = dataStore.expenses || [];
+    document.getElementById("cards").innerHTML =
+      `<div style="text-align:center;padding:30px;color:#ef4444;">
+        Failed to load data
+      </div>`;
 
-  let totalRent = 0;
-  let totalExpense = 0;
-  let totalUnits = 0;
-
-  bills.forEach(b => {
-
-    let prev = Number(b.prev || 0);
-    let curr = Number(b.current || 0);
-
-    totalUnits += (curr - prev);
-    totalRent += Number(b.rent || 0);
-  });
-
-  expenses.forEach(e => {
-    totalExpense += Number(e.amount || 0);
-  });
-
-  let membersCount = dataStore.members.length || 2;
-
-  let rentShare = totalRent / membersCount;
-  let expenseShare = totalExpense / membersCount;
-
-  let electricityShare = totalUnits * 8 / membersCount;
-
-  let total = rentShare + expenseShare + electricityShare;
-
-  return {
-    rentShare,
-    expenseShare,
-    electricityShare,
-    total
-  };
-}
-
-/* ================= MEMBERS UI ================= */
-function renderMembers(){
-
-  const box = document.getElementById("members");
-  box.innerHTML = "";
-
-  dataStore.members.forEach(m => {
-
-    let calc = calculateSplit(m.name);
-
-    const card = document.createElement("div");
-    card.className = "member-card";
-
-    card.innerHTML = `
-      <h3>${m.name}</h3>
-      <p>📞 ${m.phone}</p>
-
-      <hr>
-
-      <p>🏠 Rent: ₹${calc.rentShare.toFixed(2)}</p>
-      <p>⚡ Electricity: ₹${calc.electricityShare.toFixed(2)}</p>
-      <p>🧾 Expenses: ₹${calc.expenseShare.toFixed(2)}</p>
-
-      <h2>💰 Total: ₹${calc.total.toFixed(2)}</h2>
-
-      <button onclick="sendReminder('${m.name}')">
-        📩 Send WhatsApp
-      </button>
-    `;
-
-    box.appendChild(card);
-  });
-}
-
-/* ================= WHATSAPP ================= */
-function sendReminder(name){
-
-  let calc = calculateSplit(name);
-
-  let msg =
-`🏠 Room Expense Reminder
-
-👤 Name: ${name}
-
-🏠 Rent Share: ₹${calc.rentShare.toFixed(2)}
-⚡ Electricity: ₹${calc.electricityShare.toFixed(2)}
-🧾 Expenses: ₹${calc.expenseShare.toFixed(2)}
-
-💰 TOTAL DUE: ₹${calc.total.toFixed(2)}
-
-Please clear your payment.`;
-
-  let phone = "+916393247088";
-
-  let url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-
-  window.open(url, "_blank");
-}
-
-/* ================= TABLE ================= */
-function renderTables(data){
-
-  function render(h,b,a){
-    document.getElementById(h).innerHTML =
-      "<tr>" + Object.keys(a[0]||{}).map(x=>`<th>${x}</th>`).join("") + "</tr>";
-
-    document.getElementById(b).innerHTML =
-      a.map(r =>
-        "<tr>" + Object.values(r).map(v=>`<td>${v||""}</td>`).join("") + "</tr>"
-      ).join("");
   }
 
-  render("billHead","billBody",data.bills);
-  render("payHead","payBody",data.payments);
-  render("expHead","expBody",data.expenses);
 }
 
-/* ================= STATS ================= */
-function calcStats(data){
+function formatDate(dateStr) {
 
-  let total=0, units=0;
+  const d = new Date(dateStr);
 
-  data.bills.forEach(b=>{
-    let p=Number(b.prev||0);
-    let c=Number(b.current||0);
-    units += (c-p);
-    total += Number(b.rent||0);
+  return d.toLocaleDateString(
+    "en-IN",
+    {
+      month: "long",
+      year: "numeric"
+    }
+  );
+
+}
+
+function renderCards(members) {
+
+  let html = "";
+
+  members.forEach(m => {
+
+    const phone =
+      m.name.toLowerCase() === "avnish"
+        ? "9455030291"
+        : "6307644217";
+
+    html += `
+
+    <div class="card">
+
+      <div class="month">
+        <i class="fa-regular fa-calendar"></i>
+        ${formatDate(m.month)}
+      </div>
+
+      <div class="name">
+        <i class="fa-solid fa-user"></i>
+        ${m.name}
+      </div>
+
+      <div class="row">
+        <span>
+          <i class="fa-solid fa-gauge"></i>
+          Old Reading
+        </span>
+        <b>${m.oldReading}</b>
+      </div>
+
+      <div class="row">
+        <span>
+          <i class="fa-solid fa-gauge-high"></i>
+          New Reading
+        </span>
+        <b>${m.newReading}</b>
+      </div>
+
+      <div class="row">
+        <span>
+          <i class="fa-solid fa-bolt"></i>
+          Units Used
+        </span>
+        <b>${m.units}</b>
+      </div>
+
+      <div class="row">
+        <span>
+          <i class="fa-solid fa-plug-circle-bolt"></i>
+          Electricity Share
+        </span>
+        <b>₹${m.electricityShare}</b>
+      </div>
+
+      <div class="row">
+        <span>
+          <i class="fa-solid fa-house"></i>
+          Room Rent Share
+        </span>
+        <b>₹${m.rentShare}</b>
+      </div>
+
+      <div class="total-box">
+        <h4>Total Due</h4>
+        <div class="total">
+          ₹${m.totalDue}
+        </div>
+      </div>
+
+      <div class="member-phone">
+        <i class="fa-solid fa-phone"></i>
+        ${phone}
+      </div>
+
+      <div class="upi">
+        <i class="fa-solid fa-wallet"></i>
+        avnish.dev@ptyes
+      </div>
+
+      <div class="buttons">
+
+        <button
+          class="copy"
+          onclick="copyUPI('avnish.dev@ptyes')">
+
+          <i class="fa-regular fa-copy"></i>
+          Copy UPI
+
+        </button>
+
+        <button
+          class="whatsapp"
+          onclick="sendWhatsApp(
+            '${m.name}',
+            '${formatDate(m.month)}',
+            '${m.oldReading}',
+            '${m.newReading}',
+            '${m.units}',
+            '${m.electricityShare}',
+            '${m.rentShare}',
+            '${m.totalDue}'
+          )">
+
+          <i class="fa-brands fa-whatsapp"></i>
+          Send Details
+
+        </button>
+
+      </div>
+
+    </div>
+
+    `;
+
   });
 
-  document.getElementById("total").innerText = total;
-  document.getElementById("per").innerText = total/(data.members.length||2);
-  document.getElementById("units").innerText = units;
+  document.getElementById("cards").innerHTML = html;
+
 }
 
-load();
+function renderTable(records) {
+
+  let html = "";
+
+  records.forEach(r => {
+
+    html += `
+      <tr>
+        <td>${formatDate(r.date)}</td>
+        <td>${formatDate(r.month)}</td>
+        <td>${r.oldReading}</td>
+        <td>${r.newReading}</td>
+        <td>${r.units}</td>
+        <td>₹${r.perUnit}</td>
+        <td>₹${r.bill}</td>
+        <td>₹${r.rent}</td>
+        <td>₹${r.total}</td>
+      </tr>
+    `;
+
+  });
+
+  document.getElementById("history").innerHTML = html;
+
+}
+
+function copyUPI(upi) {
+
+  navigator.clipboard.writeText(upi);
+  toast("UPI Copied");
+
+}
+
+function sendWhatsApp(
+  name,
+  month,
+  oldReading,
+  newReading,
+  units,
+  electricity,
+  rent,
+  total
+) {
+
+  let phone = "";
+
+  if (name.toLowerCase() === "avnish") {
+    phone = "919455030291";
+  } else {
+    phone = "916307644217";
+  }
+
+ const msg =
+
+`ROOM EXPENSE BILL
+
+${name}
+${month}
+
+┌─────────────┐
+│ Unit : ${units}
+│ Elec : ₹${electricity}
+│ Rent : ₹${rent}
+└─────────────┘
+
+TOTAL : ₹${total}
+
+UPI :
+avnish.dev@ptyes`;
+  window.open(
+    `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,
+    "_blank"
+  );
+
+}
+
+function toast(text) {
+
+  const t = document.getElementById("toast");
+
+  t.innerText = text;
+  t.classList.add("show");
+
+  setTimeout(() => {
+    t.classList.remove("show");
+  }, 2000);
+
+}
