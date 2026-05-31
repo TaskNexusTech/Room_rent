@@ -1,64 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Room Expense System</title>
+
+<title>Room Expense Manager</title>
+
 <link rel="stylesheet" href="style.css">
+
+<!-- Premium Favicon -->
+<link rel="icon" type="image/svg+xml"
+href='data:image/svg+xml,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="%236366f1"/>
+<stop offset="100%" stop-color="%230ea5e9"/>
+</linearGradient>
+</defs>
+
+<path fill="url(%23g)"
+d="M32 6 8 26v30h16V38h16v18h16V26z"/>
+
+<path fill="white"
+d="M36 16 26 32h8l-3 14 13-18h-8z"/>
+</svg>'>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 </head>
 
 <body>
 
-<div class="container">
+<header class="header">
 
-  <h1 class="title">🏠 Room Expense Dashboard</h1>
+<h1>
+<i class="fa-solid fa-house-chimney"></i>
+Room Expense Manager
+</h1>
 
-  <div id="status" class="status loading">Loading...</div>
-  <div id="loader" class="loader">Loading data...</div>
+<p>Rent & Electricity Dashboard</p>
 
-  <!-- BUTTONS -->
-  <div class="topbar">
-    <button onclick="sendReminder()">📩 WhatsApp Reminder</button>
-    <button onclick="payNow()">💳 Pay</button>
-  </div>
+</header>
 
-  <!-- MEMBERS -->
-  <h2>👥 Members</h2>
-  <div id="members"></div>
+<section id="cards" class="cards"></section>
 
-  <!-- STATS -->
-  <div class="stats">
-    <div class="card">Total<br><span id="total"></span></div>
-    <div class="card">Per Person<br><span id="per"></span></div>
-    <div class="card">Units<br><span id="units"></span></div>
-  </div>
+<section class="table-card">
 
-  <!-- TABLES -->
-  <h2>📊 Bills</h2>
-  <div class="table-card">
-    <table>
-      <thead id="billHead"></thead>
-      <tbody id="billBody"></tbody>
-    </table>
-  </div>
+<div class="table-header">
 
-  <h2>💰 Payments</h2>
-  <div class="table-card">
-    <table>
-      <thead id="payHead"></thead>
-      <tbody id="payBody"></tbody>
-    </table>
-  </div>
-
-  <h2>🧾 Expenses</h2>
-  <div class="table-card">
-    <table>
-      <thead id="expHead"></thead>
-      <tbody id="expBody"></tbody>
-    </table>
-  </div>
+<h2>
+<i class="fa-solid fa-chart-column"></i>
+Monthly Expense History
+</h2>
 
 </div>
 
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Month</th>
+<th>Old Reading</th>
+<th>New Reading</th>
+<th>Units</th>
+<th>Per Unit</th>
+<th>Bill</th>
+<th>Rent</th>
+<th>Total</th>
+</tr>
+</thead>
+
+<tbody id="history"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<div id="toast" class="toast"></div>
+
 <script src="script.js"></script>
+
 </body>
 </html>
